@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "changelog": "node index.js",
     "release:major": "release major",
     "release:minor": "release minor",
     "release:patch": "release patch"
