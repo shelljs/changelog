@@ -17,7 +17,11 @@ Now, add a `script` to `package.json` like so:
   },
 ```
 
-Alright, you're good to go!
+## Dependencies
+
+You'll need to have `curl` installed in order to use this script.
+
+Also, make sure you have internet access when running this.
 
 ## Usage example
 
