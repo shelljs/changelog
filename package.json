@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "release:major": "node index.js major",
-    "release:minor": "node index.js minor",
-    "release:patch": "node index.js patch"
+    "release:major": "release major",
+    "release:minor": "release minor",
+    "release:patch": "release patch"
   },
   "bin": {
     "changelog": "index.js"
