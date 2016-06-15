@@ -6,9 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "changelog": "node index.js",
-    "release:major": "release major",
-    "release:minor": "release minor",
-    "release:patch": "release patch"
+    "release:major": "shelljs-release major",
+    "release:minor": "shelljs-release minor",
+    "release:patch": "shelljs-release patch"
   },
   "bin": {
     "shelljs-changelog": "index.js"
@@ -25,6 +25,6 @@
     "shelljs": "^0.7.0"
   },
   "devDependencies": {
-    "shelljs-release": "^0.1.5"
+    "shelljs-release": "^0.2.0"
   }
 }
