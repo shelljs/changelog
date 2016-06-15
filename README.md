@@ -13,7 +13,7 @@ Now, add a `script` to `package.json` like so:
 ```json
   "scripts": {
     "test": "... whatever you had here before ...",
-    "changelog": "changelog"
+    "changelog": "shelljs-changelog"
   },
 ```
 

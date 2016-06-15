@@ -11,7 +11,7 @@
     "release:patch": "release patch"
   },
   "bin": {
-    "changelog": "index.js"
+    "shelljs-changelog": "index.js"
   },
   "keywords": [
     "changelog",
