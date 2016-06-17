@@ -1,6 +1,6 @@
 {
   "name": "shelljs-changelog",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A simple script to create & update a changelog",
   "main": "index.js",
   "scripts": {
