@@ -5,13 +5,26 @@ require('shelljs/global');
 // Commits the changelog if it updated
 // Does not push commit
 
+function parseGitUri(uri) {
+  return uri.match(/https:..github.com\/([^./]+)\/([^./]+).*/) ||
+    uri.match(/git@github.com:(.*)\/(.*)\.git/);
+}
+
 function run() {
   echo('...generating changelog (be patient)');
 
   config.silent = true;
-  var repoInfo = exec('git remote show -n origin')
-      .grep('Push')
-      .match(/https:..github.com\/([^./]+)\/([^./]+).*/);
+  var urls = exec('git remote show -n origin')
+      .grep('Push');
+  if (!urls) {
+    console.error('Unable to find any URLs you can push to');
+    process.exit(1);
+  }
+  var repoInfo = parseGitUri(urls);
+  if (!repoInfo) {
+    console.error('Unable to parse your git URL');
+    process.exit(2);
+  }
   exec('curl -X POST -s "github-changelog-api.herokuapp.com/'+repoInfo[1]+'/'+repoInfo[2]+'"').to('CHANGELOG.md');
 
   var changelog_was_updated = false;
