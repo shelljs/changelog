@@ -25,7 +25,15 @@ function run() {
     console.error('Unable to parse your git URL');
     process.exit(2);
   }
-  exec('curl "github-changelog-api.herokuapp.com/'+repoInfo[1]+'/'+repoInfo[2]+'"').to('CHANGELOG.md');
+  var url = 'github-changelog-api.herokuapp.com/' + repoInfo[1] + '/' + repoInfo[2];
+  exec('curl -X POST -s "' + url + '"');
+  var newLog;
+  do {
+    exec('sleep 1');
+    newLog = exec('curl "' + url + '"');
+  } while (newLog.match(/^Working, try again.*/));
+  // Now that the contents are valid, we can write this out to disk
+  newLog.to('CHANGELOG.md');
 
   var changelog_was_updated = false;
   exec('git ls-files --exclude-standard --modified --others').split('\n').forEach(function (file) {
