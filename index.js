@@ -10,9 +10,39 @@ function parseGitUri(uri) {
     uri.match(/git@github.com:(.*)\/(.*)\.git/);
 }
 
+function verifyChangelog() {
+  var changelog = exec('git diff HEAD~1');
+  var lines = changelog.split('\n');
+  var isOneLine = (lines.length === 1);
+  var deletions = 0;
+  var containsErrorMessage = false;
+  lines.filter(function (line) {
+    if (/^-/.test(line)) deletions++;
+    if (line.indexOf('Make a POST first') >= 0) containsErrorMessage = true;
+  });
+  if (isOneLine) {
+    revertChanges();
+    console.error('Changelog diff should be more than 1 line long');
+    process.exit(3);
+  }
+  if (deletions > 10) {
+    revertChanges();
+    console.error('Too many deletions (-' + deletions + '), verify that the changes to CHANGELOG.md are correct');
+    process.exit(4);
+  }
+  if (containsErrorMessage) {
+    revertChanges();
+    console.error('Changelog contains an error message');
+    process.exit(5);
+  }
+}
+
+function revertChanges() {
+  exec('git checkout -- .');
+}
+
 function run() {
   echo('...generating changelog (be patient)');
-
   config.silent = true;
   var urls = exec('git remote show -n origin')
       .grep('Push');
@@ -41,6 +71,8 @@ function run() {
   });
 
   if (changelog_was_updated) {
+    echo('...verifying changelog');
+    verifyChangelog();
     echo('...committing updated changelog');
     var current_user = exec('git config user.name').trimRight();
     config.silent = false;
