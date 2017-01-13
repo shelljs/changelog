@@ -11,12 +11,12 @@ function parseGitUri(uri) {
 }
 
 function verifyChangelog() {
-  var changelog = exec('git diff HEAD~1');
-  var lines = changelog.split('\n');
-  var isOneLine = (lines.length === 1);
+  var diff = exec('git diff HEAD~1').split('\n');
+  var changelog = cat('CHANGELOG.md').split('\n');
+  var isOneLine = (changelog.length === 1);
   var deletions = 0;
   var containsErrorMessage = false;
-  lines.filter(function (line) {
+  diff.filter(function (line) {
     if (/^-/.test(line)) deletions++;
     if (line.indexOf('Make a POST first') >= 0) containsErrorMessage = true;
   });
