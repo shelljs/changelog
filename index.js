@@ -16,9 +16,9 @@ function verifyChangelog() {
   if (changelog[changelog.length - 1] === '') changelog.pop();
   var isOneLine = (changelog.length === 1);
   var deletions = diff.filter(/^-/.test).length;
-  var containsErrorMessage = false;
+  var containsError = false;
   diff.forEach(function (line) {
-    if (line.indexOf('Make a POST first') >= 0) containsErrorMessage = true;
+    if (line.indexOf('Make a POST first') >= 0) containsError = true;
   });
   if (isOneLine) {
     revertChanges();
@@ -30,7 +30,7 @@ function verifyChangelog() {
     console.error('Too many deletions (-' + deletions + '), verify that the changes to CHANGELOG.md are correct');
     process.exit(4);
   }
-  if (containsErrorMessage) {
+  if (containsError) {
     revertChanges();
     console.error('Changelog contains an error message');
     process.exit(5);
