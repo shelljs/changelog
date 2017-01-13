@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+var assert = require('assert');
 require('shelljs/global');
 
 // Creates a changelog for the current build and puts it in the root
@@ -20,21 +21,18 @@ function verifyChangelog() {
   diff.forEach(function (line) {
     if (line.indexOf('Make a POST first') >= 0) containsError = true;
   });
-  if (isOneLine) {
-    revertChanges();
-    console.error('Changelog diff should be more than 1 line long');
-    process.exit(3);
-  }
-  if (deletions > 10) {
-    revertChanges();
-    console.error('Too many deletions (-' + deletions + '), verify that the changes to CHANGELOG.md are correct');
-    process.exit(4);
-  }
-  if (containsError) {
-    revertChanges();
-    console.error('Changelog contains an error message');
-    process.exit(5);
-  }
+  assert(
+    changelog.length > 1,
+    'Changelog diff should be more than 1 line long'
+  );
+  assert(
+    deletions < 10,
+    'Too many deletions (-' + deletions + '), verify that the changes to CHANGELOG.md are correct'
+  );
+  assert(
+    !containsError,
+    'Changelog contains an error message'
+  );
 }
 
 function revertChanges() {
@@ -72,7 +70,13 @@ function run() {
 
   if (changelog_was_updated) {
     echo('...verifying changelog');
-    verifyChangelog();
+    try {
+      verifyChangelog();
+    } catch (err) {
+      revertChanges();
+      console.error(err.message);
+      process.exit(1);
+    }
     echo('...committing updated changelog');
     var current_user = exec('git config user.name').trimRight();
     config.silent = false;
