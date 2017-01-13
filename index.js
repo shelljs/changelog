@@ -67,7 +67,7 @@ function run() {
 
   var changelog_was_updated = false;
   exec('git ls-files --exclude-standard --modified --others').split('\n').forEach(function (file) {
-    if ( file === 'CHANGELOG.md') changelog_was_updated = true;
+    if (file === 'CHANGELOG.md') changelog_was_updated = true;
   });
 
   if (changelog_was_updated) {
