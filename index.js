@@ -13,6 +13,7 @@ function parseGitUri(uri) {
 function verifyChangelog() {
   var diff = exec('git diff HEAD CHANGELOG.md').split('\n');
   var changelog = cat('CHANGELOG.md').split('\n');
+  if (changelog[changelog.length - 1] === '') changelog.pop();
   var isOneLine = (changelog.length === 1);
   var deletions = 0;
   var containsErrorMessage = false;
