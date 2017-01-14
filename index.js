@@ -6,6 +6,11 @@ require('shelljs/global');
 // Commits the changelog if it updated
 // Does not push commit
 
+// The maximum number of deletions for updating the changelog should
+// be 2 lines. Typically, the "Unreleased" and "Full Changelog" links
+// are changed because the version increases.
+var maxDeletions = 2;
+
 function parseGitUri(uri) {
   return uri.match(/https:..github.com\/([^./]+)\/([^./]+).*/) ||
     uri.match(/git@github.com:(.*)\/(.*)\.git/);
@@ -26,7 +31,7 @@ function verifyChangelog() {
     'Changelog diff should be more than 1 line long'
   );
   assert(
-    deletions < 10,
+    deletions < maxDeletions,
     'Too many deletions (-' + deletions + '), verify that the changes to CHANGELOG.md are correct'
   );
   assert(
