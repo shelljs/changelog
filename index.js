@@ -28,15 +28,15 @@ function verifyChangelog() {
   });
   assert(
     changelog.length > 1,
-    'Changelog diff should be more than 1 line long'
+    'Changelog was reduced to one line, this is an error.'
   );
   assert(
     deletions < MAX_DELETIONS,
-    'Too many deletions (-' + deletions + '), verify that the changes to CHANGELOG.md are correct'
+    'Too many deletions (-' + deletions + '), this is probably an error.'
   );
   assert(
     !containsError,
-    'Changelog contains an error message'
+    'Changelog contains an error message.'
   );
 }
 
