@@ -11,6 +11,10 @@ require('shelljs/global');
 // are changed because the version increases.
 var MAX_DELETIONS = 5;
 
+// Command line option: --force
+// Skips validating the number of deletions in the changelog diff.
+var force = (process.argv.indexOf('--force') >= 0);
+
 function parseGitUri(uri) {
   return uri.match(/https:..github.com\/([^./]+)\/([^./]+).*/) ||
     uri.match(/git@github.com:(.*)\/(.*)\.git/);
@@ -31,13 +35,16 @@ function verifyChangelog() {
     'Changelog was reduced to one line, this is an error.'
   );
   assert(
-    deletions < MAX_DELETIONS,
-    'Too many deletions (-' + deletions + '), this is probably an error.'
-  );
-  assert(
     !containsError,
     'Changelog contains an error message.'
   );
+  if (!force) {
+    assert(
+      deletions < MAX_DELETIONS,
+      'Too many deletions (-' + deletions + '), this is probably an error.\n' +
+      'Run with --force to ignore this error.'
+    );
+  }
 }
 
 function revertChanges() {
@@ -74,8 +81,8 @@ function run() {
   });
 
   if (changelog_was_updated) {
-    echo('...verifying changelog');
     try {
+      echo('...verifying changelog');
       verifyChangelog();
     } catch (err) {
       revertChanges();

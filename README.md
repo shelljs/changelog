@@ -32,3 +32,10 @@ npm run changelog
 ```
 
 For best results, try to run this after every time you publish.
+
+## Command line options
+
+### `--force`
+
+By default, this script verifies that the changelog diff contains no more than
+5 deletions. With `--force` enabled, this step is skipped.
