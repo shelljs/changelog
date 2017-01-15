@@ -7,9 +7,9 @@ require('shelljs/global');
 // Does not push commit
 
 // The maximum number of deletions for updating the changelog should
-// be 2 lines. Typically, the "Unreleased" and "Full Changelog" links
+// be 5 lines. Typically, the "Unreleased" and "Full Changelog" links
 // are changed because the version increases.
-var MAX_DELETIONS = 2;
+var MAX_DELETIONS = 5;
 
 function parseGitUri(uri) {
   return uri.match(/https:..github.com\/([^./]+)\/([^./]+).*/) ||
