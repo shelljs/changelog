@@ -25,7 +25,9 @@ function verifyChangelog() {
   var changelog = cat('CHANGELOG.md').split('\n');
   if (changelog[changelog.length - 1] === '') changelog.pop();
   var isOneLine = (changelog.length === 1);
-  var deletions = diff.filter(/^-/.test).length;
+  var deletions = diff.filter(function (x) {
+    return /^-/.test(x);
+  }).length;
   var containsError = false;
   diff.forEach(function (line) {
     if (line.indexOf('Make a POST first') >= 0) containsError = true;
