@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 var assert = require('assert');
+require('shelljs-plugin-sleep');
 require('shelljs/global');
 
 // Creates a changelog for the current build and puts it in the root
@@ -67,7 +68,7 @@ function run() {
   exec('curl -X POST -s "' + url + '"');
   var newLog;
   do {
-    exec('sleep 1');
+    sleep(1);
     newLog = exec('curl "' + url + '"');
   } while (newLog.match(/^Working, try again.*/));
   // Now that the contents are valid, we can write this out to disk
