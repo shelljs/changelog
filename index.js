@@ -38,13 +38,11 @@ function verifyChangelog() {
     !containsError,
     'Changelog contains an error message.'
   );
-  if (!force) {
-    assert(
-      deletions < MAX_DELETIONS,
-      'Too many deletions (-' + deletions + '), this is probably an error.\n' +
-      'Run with --force to ignore this error.'
-    );
-  }
+  assert(
+    deletions < MAX_DELETIONS,
+    'Too many deletions (-' + deletions + '), this is probably an error.\n' +
+    'Run with --force to ignore this error.'
+  );
 }
 
 function revertChanges() {
@@ -81,13 +79,15 @@ function run() {
   });
 
   if (changelog_was_updated) {
-    try {
-      echo('...verifying changelog');
-      verifyChangelog();
-    } catch (err) {
-      revertChanges();
-      console.error(err.message);
-      process.exit(1);
+    if (!force) {
+      try {
+        echo('...verifying changelog');
+        verifyChangelog();
+      } catch (err) {
+        revertChanges();
+        console.error(err.message);
+        process.exit(1);
+      }
     }
     echo('...committing updated changelog');
     var current_user = exec('git config user.name').trimRight();
