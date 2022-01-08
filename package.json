@@ -26,10 +26,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "shelljs": "^0.7.0",
-    "shelljs-plugin-sleep": "^0.1.0"
+    "shelljs": "^0.8.5",
+    "shelljs-plugin-sleep": "^0.2.1"
   },
   "devDependencies": {
-    "shelljs-release": "^0.2.0"
+    "shelljs-release": "^0.5.1"
   }
 }
