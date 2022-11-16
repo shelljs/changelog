@@ -1,5 +1,13 @@
 # Change Log
 
+## [Unreleased](https://github.com/shelljs/changelog/tree/HEAD)
+
+[Full Changelog](https://github.com/shelljs/changelog/compare/v0.2.6...HEAD)
+
+**Fixed bugs:**
+
+- fix: support own changelog [\#10](https://github.com/shelljs/changelog/pull/10) ([nfischer](https://github.com/nfischer))
+
 ## [v0.2.6](https://github.com/shelljs/changelog/tree/v0.2.6) (2022-01-08)
 [Full Changelog](https://github.com/shelljs/changelog/compare/v0.2.5...v0.2.6)
 
