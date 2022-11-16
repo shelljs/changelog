@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 var assert = require('assert');
 require('shelljs-plugin-sleep');
-require('shelljs/global');
+var shell = require('shelljs');
 
 // Creates a changelog for the current build and puts it in the root
 // Commits the changelog if it updated
@@ -22,9 +22,9 @@ function parseGitUri(uri) {
 }
 
 function verifyChangelog() {
-  var diffStr = exec('git diff HEAD CHANGELOG.md');
+  var diffStr = shell.exec('git diff HEAD CHANGELOG.md');
   var diff = diffStr.split('\n');
-  var changelog = cat('CHANGELOG.md').split('\n');
+  var changelog = shell.cat('CHANGELOG.md').split('\n');
   if (changelog[changelog.length - 1] === '') changelog.pop();
   var isOneLine = (changelog.length === 1);
   var deletions = diff.filter(function (x) {
@@ -61,13 +61,13 @@ function verifyChangelog() {
 }
 
 function revertChanges() {
-  exec('git checkout -- .');
+  shell.exec('git checkout -- .');
 }
 
 function run() {
-  echo('...generating changelog (be patient)');
-  config.silent = true;
-  var urls = exec('git remote show -n origin')
+  shell.echo('...generating changelog (be patient)');
+  shell.config.silent = true;
+  var urls = shell.exec('git remote show -n origin')
       .grep('Push');
   if (!urls) {
     console.error('Unable to find any URLs you can push to');
@@ -79,24 +79,24 @@ function run() {
     process.exit(2);
   }
   var url = 'github-changelog-api.herokuapp.com/' + repoInfo[1] + '/' + repoInfo[2];
-  exec('curl -X POST -s "' + url + '"');
+  shell.exec('curl -X POST -s "' + url + '"');
   var newLog;
   do {
-    sleep(1);
-    newLog = exec('curl "' + url + '"');
+    shell.sleep(1);
+    newLog = shell.exec('curl "' + url + '"');
   } while (newLog.match(/^Working, try again.*/));
   // Now that the contents are valid, we can write this out to disk
   newLog.to('CHANGELOG.md');
 
   var changelog_was_updated = false;
-  exec('git ls-files --exclude-standard --modified --others').split('\n').forEach(function (file) {
+  shell.exec('git ls-files --exclude-standard --modified --others').split('\n').forEach(function (file) {
     if (file === 'CHANGELOG.md') changelog_was_updated = true;
   });
 
   if (changelog_was_updated) {
     if (!force) {
       try {
-        echo('...verifying changelog');
+        shell.echo('...verifying changelog');
         verifyChangelog();
       } catch (err) {
         revertChanges();
@@ -104,14 +104,14 @@ function run() {
         process.exit(1);
       }
     }
-    echo('...committing updated changelog');
-    var current_user = exec('git config user.name').trimRight();
-    config.silent = false;
-    exec('git add CHANGELOG.md');
-    exec('git commit -m "docs(changelog): updated by ' + current_user + ' [ci skip]"');
-    echo('Done.  You can now \'git push\' the updated changelog.');
+    shell.echo('...committing updated changelog');
+    var current_user = shell.exec('git config user.name').trimRight();
+    shell.config.silent = false;
+    shell.exec('git add CHANGELOG.md');
+    shell.exec('git commit -m "docs(changelog): updated by ' + current_user + ' [ci skip]"');
+    shell.echo('Done.  You can now \'git push\' the updated changelog.');
   } else {
-    echo('CHANGELOG.md already up-to-date.');
+    shell.echo('CHANGELOG.md already up-to-date.');
   }
 }
 
