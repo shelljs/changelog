@@ -22,7 +22,8 @@ function parseGitUri(uri) {
 }
 
 function verifyChangelog() {
-  var diff = exec('git diff HEAD CHANGELOG.md').split('\n');
+  var diffStr = exec('git diff HEAD CHANGELOG.md');
+  var diff = diffStr.split('\n');
   var changelog = cat('CHANGELOG.md').split('\n');
   if (changelog[changelog.length - 1] === '') changelog.pop();
   var isOneLine = (changelog.length === 1);
@@ -31,12 +32,23 @@ function verifyChangelog() {
   }).length;
   var containsError = false;
   diff.forEach(function (line) {
-    if (line.indexOf('Make a POST first') >= 0) containsError = true;
+    if (line.indexOf('Make a POST first') >= 0
+        && line.indexOf('https://github.com/shelljs/changelog/issues/1') < 0) {
+      // If the changelog output is telling us to make a POST request, it's
+      // probably a bug in the script. Unless the changelog is for the
+      // shelljs/changelog project itself and is referring to GitHub issue #1,
+      // which was a bug report for that issue, and has since been fixed.
+      containsError = true;
+    }
   });
   assert(
     changelog.length > 1,
     'Changelog was reduced to one line, this is an error.'
   );
+  if (containsError) {
+    console.error('Error message for changelog:');
+    console.error(diffStr.toString());
+  }
   assert(
     !containsError,
     'Changelog contains an error message.'
